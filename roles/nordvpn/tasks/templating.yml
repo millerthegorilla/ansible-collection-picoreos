@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# templating file for nordvpn
+- name: Create file template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/auth.txt.j2"
+    dest: "{{ role_path }}/files/templated/auth.txt"
+    owner: "{{ lookup('env', 'USER') }}"
+    group: "{{ lookup('env', 'USER') }}"
+    mode: '0400'
+  delegate_to: localhost

@@ -1,0 +1,87 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for nordvpn
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
+- name: >-
+   Install openvpn
+   ** Takes a long time! (rpm-ostree install) **
+  community.general.rpm_ostree_pkg:
+    name: openvpn
+    state: present
+  register: openvpn_installed
+  when: '"openvpn" not in ansible_facts.packages'
+
+- name: Reboot if necessary
+  ansible.builtin.reboot:
+    msg: "Rebooting to install packages"
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  when: >-
+      openvpn_installed.needs_reboot is defined
+      and openvpn_installed.needs_reboot
+
+- name: Complete templates
+  ansible.builtin.import_tasks: templating.yml
+
+- name: Add user back to sudo group to allow rsync
+  ansible.builtin.user:
+    append: true
+    groups: sudo
+    name: "{{ ansible_user }}"
+  tags: sudo_removal
+
+- meta: reset_connection
+  tags: sudo_removal
+
+- name: Copy OpenVPN directory
+  ansible.posix.synchronize:
+    src: "{{ role_path }}/files/openvpn/"
+    dest: /etc/openvpn/
+    owner: false
+    group: false
+
+- name: Remove user from sudo group after rsync
+  ansible.builtin.raw: sudo gpasswd -d {{ ansible_user }} sudo
+  tags: sudo_removal
+
+- meta: reset_connection
+  tags: sudo_removal
+
+- name: Copy auth file
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/templated/auth.txt"
+    dest: /etc/openvpn/
+    mode: 0400
+    owner: root
+    group: root
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/systemd/system/openvpn_rand.service"
+    dest: /etc/systemd/system/
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Apply SELinux file context to openvpn
+  community.general.sefcontext:
+    target: /etc/openvpn(/.*)?
+    setype: openvpn_etc_t
+    seuser: system_u
+    reload: true
+    state: present
+  register:
+    selinux_applied
+
+- name: Apply new SELinux file context to filesystem
+  ansible.builtin.command: restorecon -irv /etc/openvpn
+  when:
+    selinux_applied.changed is true
+
+- name: Enable and start openvpn_rand service
+  ansible.builtin.systemd:
+    name: openvpn_rand
+    enabled: true
+    state: started

@@ -1,0 +1,10 @@
+**/files/templated/*
+.venv
+.venv/*
+.env
+.env/*
+roles/nordvpn/files/openvpn/auth.txt
+.vscode/*
+.vscode
+.ansible/*
+.ansible

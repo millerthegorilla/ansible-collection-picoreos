@@ -1,0 +1,91 @@
+- name: Provision CoreOS on Raspberry Pi 4
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - role: rpi4_coreos
+      rpi4_coreos_provision_disk: "sdb"
+      rpi4_coreos_ssh_path: '~/.ssh/id_ed25519.pub'
+      when: "(rpi4_coreos_provision_disk in ansible_devices) | bool"
+      tags: rpi4_coreos
+- name: Install required packages
+  hosts: picoreos_hosts
+  gather_facts: false
+  remote_user: core
+  roles:
+    - role: req_install
+      vars:
+        fedora_version: 41
+      tags: req_install
+- name: Harden server
+  hosts: picoreos_hosts
+  become: true
+  gather_facts: true
+  roles:
+    - role: devsec.hardening.os_hardening
+      tags: [devsec, devsec_os_hardening]
+      vars:
+        os_auditd_enabled: false
+        os_immutable_fs: true
+        os_ignore_users:
+          - os_ignore_users
+          - 'adm'
+          - 'avahi-autoipd'
+          - 'bin'
+          - 'ceph'
+          - 'chrony'
+          - 'cockpit-ws'
+          - 'daemon'
+          - 'dbus'
+          - 'dockerroot'
+          - 'etcd'
+          - 'ftp'
+          - 'games'
+          - 'kube'
+          - 'lp'
+          - 'mail'
+          - 'nobody'
+          - 'operator'
+          - 'polkitd'
+          - 'rpc'
+          - 'rpcuser'
+          - 'sshd'
+          - 'sssd'
+          - 'systemd-bus-proxy'
+          - 'systemd-network'
+          - 'systemd-resolve'
+          - 'systemd-timesync'
+          - 'tcpdump'
+          - 'tss'
+          - 'clevis'
+          - 'dnsmasq'
+          - 'zincati'
+          - 'systemd-coredump'
+          - 'systemd-oom'
+          - 'usbmuxd'
+    - role: devsec.hardening.ssh_hardening
+      tags: [devsec, devsec_ssh_hardening]
+      vars:
+        ssh_immutable_fs: true
+        ssh_authorized_keys_file: '.ssh/authorized_keys.d/ignition'
+- name: Add VPN
+  hosts: picoreos_hosts
+  gather_facts: true
+  become: true
+  roles:
+    - role: nordvpn
+      tags: nordvpn
+      vars:
+        nordvpn_openvpn_auth_txt_upper: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30356239336663323737323661613237336131643664306231316263323439396330393861386366
+          6166333065336561353035393633626538666630616263350a303066313866333534343863636133
+          37613130353761383062363264376535386337663666326563633263336134393530396463616462
+          3730646130656437370a653434323037656365633564383232353837313265313039653730346465
+          39353338366334336635666166303961326535656565636231633639306438663164
+        nordvpn_openvpn_auth_txt_lower: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          37343364336161333235343133396130306663363363613938613732376139373165393539323535
+          3039646539303162316663643338353764356530656161360a656136383038303566346430616331
+          36656432646638313565333132633239353130653838306165356237623666373838386564636532
+          3264383162393332310a343731393334306630353932643330363261316465356636613263616437
+          63333964333564353639376131376637613261383239343832356364663165663163

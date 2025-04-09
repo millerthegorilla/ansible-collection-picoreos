@@ -1,0 +1,4 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for rpi4_coreos
+rpi4_coreos_user_ssh_authorized_key: "{{ lookup('ansible.builtin.file', rpi4_coreos_ssh_path) }}"
