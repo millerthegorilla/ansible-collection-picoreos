@@ -1,6 +1,3 @@
-#SPDX-License-Identifier: MIT-0
----
-# tasks file for nordvpn
 - name: Gather package facts
   ansible.builtin.package_facts:
 
@@ -23,7 +20,7 @@
       and openvpn_installed.needs_reboot
 
 - name: Complete templates
-  ansible.builtin.import_tasks: templating.yml
+  ansible.builtin.import_tasks: templating.yaml
 
 - name: Add user back to sudo group to allow rsync
   ansible.builtin.user:
@@ -49,21 +46,19 @@
 - meta: reset_connection
   tags: sudo_removal
 
-- name: Copy auth file
-  ansible.builtin.copy:
-    src: "{{ role_path }}/files/templated/auth.txt"
-    dest: /etc/openvpn/
-    mode: 0400
-    owner: root
-    group: root
+# - name: Copy auth file
+#   ansible.builtin.copy:
+#     src: "{{ role_path }}/files/templated/auth.txt"
+#     dest: /etc/openvpn/
+#     mode: 0400
+#     owner: root
+#     group: root
 
 - name: Copy systemd service
   ansible.builtin.copy:
     src: "{{ role_path }}/files/systemd/system/openvpn_rand.service"
     dest: /etc/systemd/system/
     mode: '0644'
-    owner: root
-    group: root
 
 - name: Apply SELinux file context to openvpn
   community.general.sefcontext:
@@ -81,7 +76,7 @@
     selinux_applied.changed is true
 
 - name: Enable and start openvpn_rand service
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     name: openvpn_rand
     enabled: true
     state: started
