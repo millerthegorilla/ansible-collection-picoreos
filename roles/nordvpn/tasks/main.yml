@@ -20,7 +20,7 @@
       and openvpn_installed.needs_reboot
 
 - name: Complete templates
-  ansible.builtin.import_tasks: templating.yaml
+  ansible.builtin.import_tasks: templating.yml
 
 - name: Add user back to sudo group to allow rsync
   ansible.builtin.user:

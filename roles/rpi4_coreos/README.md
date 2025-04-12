@@ -10,7 +10,8 @@ The rpi4_coreos role is a <b>destructive operation</b> and will overwrite anythi
 
 You will need to put the microssd card into a slot on your machine, and then define which disk name it is in the playbook as the variable to the rpi4_coreos role.  The rpi4_coreos role will run to install the latest coreos and firmware and will then prompt you to remove the microsd card and place it in your raspberry pi, and boot up.
 
-As soon as the pi has finished booting, which you can confirm with ```ssh core@picoreos.lan```, you can press enter to continue.  All roles/tasks from then on will run automatically, unless the script detects that you need to adjust sudo settings on the remote.
+As soon as the pi has finished booting, which you can confirm with 
+```ssh core@YOUR_INVENTORY_REMOTE_HOSTNAME_HERE```, you can press enter to continue.  All roles/tasks from then on will run automatically, unless the script detects that you need to adjust sudo settings on the remote.
 
 There are a few reboots during the process of installation and these take some time, as coreos on the pi4b takes about 4 minutes to reboot.
 

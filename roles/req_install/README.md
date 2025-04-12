@@ -9,6 +9,8 @@ Requirements
 
 The role uses the ansible.builtin.raw module for most of the work.  It is idempotent though, so you can run it repeatedly without issue.
 
+`gather_facts = false` is a requirement of the role, as until it has finished, there is no python installed on the machine.
+
 Role Variables
 --------------
 

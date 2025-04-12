@@ -1,0 +1,11 @@
+# these can be installed optionally, if you want to use the collection playbook
+# picoreos_pb.yml
+---
+roles:
+  # Install clamav role
+  - src: https://github.com/cisagov/ansible-role-clamav
+
+collections:
+  # Install the ansible-devsec-hardening collection fork that
+  # has been modified to work with rpm-ostree
+  - src: https://github.com/millerthegorilla/ansible-collection-hardening,os_immutable_fs
