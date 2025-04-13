@@ -2,7 +2,7 @@ Host {{ inventory_hostname }}
   Hostname {{ inventory_hostname }}
   User {{ ansible_user }}
   PubKeyAuthentication yes
-  PubkeyAcceptedKeyTypes={{ ssh_config_key_type }}
+  PubkeyAcceptedKeyTypes={{ ssh_config_accepted_key_type }}
   PreferredAuthentications publickey
   IdentityFile {{ ssh_config_coreos_ssh_path }}
   IdentitiesOnly yes

@@ -1,0 +1,24 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for server_hardening
+- name: Devsec_os_hardening
+  vars:
+    os_auditd_enabled: false
+    os_immutable_fs: true
+  ansible.builtin.include_role:
+    name: devsec.hardening.os_hardening
+  tags: [devsec, devsec_os_hardening]
+
+- name: Devsec_ssh_hardening
+  vars:
+    ssh_immutable_fs: true
+    ssh_authorized_keys_file: '.ssh/authorized_keys.d/ignition'
+  ansible.builtin.include_role:
+    name: devsec.hardening.ssh_hardening
+  tags: [devsec, devsec_ssh_hardening]
+
+# - name: Install/configure clamav
+
+# - name: Install/configure Snort/IDS
+
+# - name: Install cockpit

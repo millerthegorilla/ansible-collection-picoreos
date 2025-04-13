@@ -1,0 +1,4 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for req_remove
+req_install_ansible_required_packages: python python3-libselinux python3-rpm python3-firewall policycoreutils-python-utils firewalld

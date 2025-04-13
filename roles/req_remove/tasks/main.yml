@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for req_remove
+- name: Include vars from req_install
+  ansible.builtin.include_vars:
+    file: ../../req_install/defaults/main.yml
+
+- name: Remove python
+  community.general.rpm_ostree_pkg:
+    name: "{{ req_install_ansible_required_packages }}"
+    state: absent
+
+- name: Reboot remote and wait for it to restart
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 5

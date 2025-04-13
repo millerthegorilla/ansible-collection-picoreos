@@ -13,8 +13,9 @@ Role Variables
 --------------
 ```
   ssh_config_out_path: "~/.ssh"
-  ssh_config_key_type: "ssh-ed25519"
-  ssh_config_coreos_ssh_path: "{{ ssh_config_out_path }}/{{ ssh_config_key_type }}.pub"
+  ssh_config_accepted_key_type: "ssh-ed25519"
+  ssh_config_id_file: "id_ed25519"
+  ssh_config_coreos_ssh_path: "{{ ssh_config_out_path }}/{{ ssh_config_id_file }}"
 ```
 
 Dependencies
@@ -33,8 +34,9 @@ Example Playbook
     - role: ssh_config
       vars:
         ssh_config_out_path: "~/.ssh"
-        ssh_config_key_type: "ssh-ed25519"
-        ssh_config_coreos_ssh_path: "{{ ssh_config_out_path }}/{{ ssh_config_key_type }}.pub"
+        ssh_config_accepted_key_type: "ssh-ed25519"
+        ssh_config_id_file: "id_ed25519"
+        ssh_config_coreos_ssh_path: "{{ ssh_config_out_path }}/{{ ssh_config_id_file }}"
   tags: "ssh_config"
 ```
 

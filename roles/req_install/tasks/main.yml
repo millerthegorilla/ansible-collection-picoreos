@@ -1,6 +1,6 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# tasks file for req_install
+# tasks for req_install
 - name: Check if packages are already installed
   ansible.builtin.raw:
     rpm -qa |grep "{{ req_install_ansible_required_packages[-1] }}"
@@ -29,7 +29,7 @@
   when: insudogrp.failed is true
   tags: sudo_removal
 
-- name: Check if python is installed - ignore failure
+- name: Check if python is installed - ** IGNORE THE FAILURE **
   ansible.builtin.raw: which python
   register: pyexists
   ignore_errors: true
@@ -43,6 +43,10 @@
     + req_install_ansible_required_packages }}
   register: install_output
   when: pyexists.rc != 0
+
+- name: Set fact for req_removal role if used
+  ansible.builtin.set_fact:
+    req_install_ansible_required_packages: "{{ req_install_ansible_required_packages }}"
 
 - name: Check if user is in sudo group
   ansible.builtin.raw: groups {{ id_user.stdout_lines[0] }} | grep sudo
