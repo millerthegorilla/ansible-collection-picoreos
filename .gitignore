@@ -1,4 +1,5 @@
 **/files/templated/*
+!**/files/templated/.gitignore
 .venv
 .venv/*
 .env
