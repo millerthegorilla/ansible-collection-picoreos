@@ -6,17 +6,25 @@ This collection provides a set of ansible roles to provision a coreos rpi4 serve
 
 The firmware is provided by https://github.com/pftf/RPi4/releases and coreos-installer installs coreos.
 
-To get started you will need to create a playbook that calls the roles.  An example playbook is included as picoreos_pb.yml
+To get started you will need to create a playbook that calls the roles.  An example playbook is included as picoreos_pb.yml in the playbook directory.
+
+## install
+
+To install the collection run the following command:
+`ansible-galaxy install https://github.com/millerthegorilla/ansible-collection-picoreos`
 
 ## roles
-The following roles are run for a complete install:
+The collection contains the following roles:
 &nbsp;&nbsp;
-- rpi4_coreos&emsp;&emsp;&emsp;&emsp;&emsp;uses latest https://github.com/pftf/RPi4/release to install the latest firmware and coreos-installer to install the coreos fedora version that you define as 'fedora_version'
-- req_install&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;installs the packages that are required for ansible to work on coreos
-- devsec_os_hardening&emsp;a modified fork of [devsec_os_hardening](#devsec_hardening)
-- devsec_ssh_hardening&emsp;a modified fork of [devsec_ssh_hardening](#devsec_hardening)
-- nordvpn&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;openvpn install of nordvpn configured to connect to random uk vpn server on boot
-- server_hardening&emsp;&emsp;to come... fail2ban and some other bits and pieces
+- [ssh_config](roles/ssh_config/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;runs through the inventory hostnames and constructs a reasonably secure .ssh/config
+- [rpi4_coreos](roles/rpi4_coreos/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;uses latest https://github.com/pftf/RPi4/release to install the latest firmware and coreos-installer to install the coreos fedora version that you define as 'fedora_version'
+- [req_install](roles/req_install/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;installs the packages that are required for ansible to work on coreos
+- [fail2ban](roles/fail2ban/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;installs and configures fail2ban with an ssh jail
+- [harden_server](roles/harden_server/README.md)&emsp;&emsp;&emsp;&emsp;&nbsp;installs the following roles, from fork of devsec.ansible-collection-hardening, modified to work with rpm_ostree systems. See [ansible-collection-hardening(fork)](https://github.com/millerthegorilla/ansible-collection-hardening):
+  - devsec_os_hardening&emsp;a modified fork of [devsec_os_hardening](#devsec_hardening)
+  - devsec_ssh_hardening&emsp;a modified fork of [devsec_ssh_hardening](#devsec_hardening)
+- [nordvpn](roles/nordvpn/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;openvpn install of nordvpn configured to connect to random uk vpn server on boot
+- [req_remove](roles/req_remove/README.md)&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;removes the ansible requirements installed by req_install role.
 
 ## caveat!
 <b>MAKE CERTAIN</b> that the disk name is correct in the [variables](#variables) for the rpi4_coreos role.
@@ -35,6 +43,9 @@ If the ansible script is interrupted for some reason and you then rerun, be awar
 ## tested against
 This repo has only been tested against a rpi4b with 8Gb of ram.
 
+## requirements
+A control node that has podman and a virtual environment or similar containing ansible.
+
 ## dependencies
   create a new python virtual environment and install ansible, python3-rpm on the host and pip install rpm in the prefix.
   Tested using Fedora Silverblue as a control node.
@@ -49,12 +60,12 @@ This repo has only been tested against a rpi4b with 8Gb of ram.
   ssh key is provisioned into the microssd image.
 
 ## optional
-  You can layer/install coreos-installer and ansible will use it.  If it doesn't find it, it uses a version inside a container instead.
+  You can layer/install coreos-installer and ansible will use it.  If it doesn't find it, it uses a version inside a container, which it pulls using podman, instead.
 
 ## configuration
 
 ### butane
-You can find the butane template in roles/rpi4_coreos/templates/.  Coreos has an immutable file system and so currently /var is mounted within a luks encrypted partition.  If you want to unlock this partition on another machine you will need to define an encryption key in the butane configuration.
+You can find the butane template in roles/rpi4_coreos/templates/.  Coreos has an immutable file system and currently /var is mounted within a luks encrypted partition.  If you want to unlock this partition on another machine you will need to define an encryption key in the butane configuration.
 
 ### variables
   You will need to add some variables to call the roles
@@ -64,19 +75,23 @@ You can find the butane template in roles/rpi4_coreos/templates/.  Coreos has an
     rpi4_coreos_ssh_path: '~/.ssh/id_ed25519.pub'
   ```
   - req_install
+    `req_install_other_packages` is useful if you want to save time, as if there is a role later on that installs a package it will reboot every time it is installed.  If you have three roles that all install a package, then the machine will install and reboot three times.  If you define those packages installed in other roles using this variable, then the req_install role will install those pacakges and reboot once, and that will be the only reboot necessary.
   ```
     fedora_version: 41
+    req_install_other_packages: openvpn,fail2ban
   ```
-  - os_hardening:
-  ```
-    os_immutable_fs: true
-    os_auditd_enabled: false
-  ```
-  -ssh_hardening
-  ```
-    os_immutable_fs: true
-    ssh_authorized_keys_file: '.ssh/authorized_keys.d/ignition'
-  ```
+  - harden_server:
+  Currently there are no variables for the tasks in this role.  The forked version of devsec.ansible-collection-hardening has some variables that are required, so it is not encouraged to change them.  The required variables are listed below.  However, the devsec hardening roles have many variables that you can override.  For more information see https://github.com/millerthegorilla/ansible-collection-hardening
+    - devsec.ansible-collection-hardening.os_hardening:
+    ```
+      os_immutable_fs: true
+      os_auditd_enabled: false
+    ```
+    - devsec.ansible-collection-hardening.ssh_hardening
+    ```
+      os_immutable_fs: true
+      ssh_authorized_keys_file: '.ssh/authorized_keys.d/ignition'
+    ```
   - nordvpn
     NordVPN uses an auth.txt file with two lines of a password for accessing
     the nordvpn service via openvpn.  The following variables are vault encrypted
@@ -132,15 +147,20 @@ picoreos_hosts
 ```
 ansible-vault encrypt_string --ask-vault-pass 'password_here'
 ```
-  The vault password that you are prompted for will be entered on the command line.  You will need
+  The vault password that you are prompted for will be entered on the command line when running the ansible-playbook [command line](#command-line).  You will need
 to use the same vault password for all the encrypted details.
 
 ## command line
 ```
-ansible-playbook -i inventory --ask-vault-password picoreos_pb.yml
+ansible-playbook -i inventory --ask-vault-password your_playbook.yml
 ```
+# Playbook
+There is an example playbook that can be accessed as follows:
+` ansible-playbook millerthegorilla.picoreos.picoreos_pb -i /home/james/src/picoreos/inventory --ask-vault-pass --extra-vars "req_install_other_packages='fail2ban, openvpn, openssh'"`
 
-## ansible tags
+It runs all of the roles, and has some tags defined.
+
+## playbook ansible tags
 As far as possible, the roles are idempotent, so if you interrupt the process you can start again.
 If you are restarting, then some of the earlier play tasks that use the raw module with sudo will
 moan about lack of sudo access.  This is because the remote_user is removed from the sudo group as
@@ -152,10 +172,15 @@ ansible-playbook -i inventory --ask-vault-password --skip-tags sudo_removal ./pi
 Each of the secondary roles has a tag which allows you to skip those roles if you want.  Available
 role tags are:
 ```
+rpi4_coreos           allows you to skip the rpi4_coreos role
+req_install           allows you to skip the req_install role
 devsec                allows you to skip both os_hardening and ssh_hardening
+fail2ban              allows you to skip the fail2ban role
+harden_server         allows you to skip the harden server role
 devsec_os_hardening   allows you to skip devsec.os_hardening
 devsec_ssh_hardening  allows you to skip devsec.ssh_hardening
 nordvpn               allows you to skip the nordvpn role
+req_remove            allows you to skip the req_remove role
 ```
 
 ## devsec_hardening

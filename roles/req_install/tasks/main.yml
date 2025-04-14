@@ -40,13 +40,17 @@
     sudo rpm-ostree --idempotent install
     {{ req_install_rpmfusion_rpm_url + ' '
     + req_install_rpmfusion_rpm_url_nonfree + ' '
-    + req_install_ansible_required_packages }}
+    + req_install_ansible_required_packages + ' '
+    + req_install_other_packages }}
   register: install_output
   when: pyexists.rc != 0
 
 - name: Set fact for req_removal role if used
   ansible.builtin.set_fact:
-    req_install_ansible_required_packages: "{{ req_install_ansible_required_packages }}"
+    req_install_ansible_required_packages: >
+      "{{ req_install_ansible_required_packages + ' '
+      + req_install_other_packages }}"
+    cacheable: true
 
 - name: Check if user is in sudo group
   ansible.builtin.raw: groups {{ id_user.stdout_lines[0] }} | grep sudo
@@ -79,3 +83,15 @@
   ansible.builtin.wait_for_connection:
     delay: 120
   when: reboot.skipped is not true and reboot.failed is false
+
+- name: Add firewalld rich rule to only allow ssh from local network
+  ansible.posix.firewalld:
+    rich-rule: 'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'
+    permanent: true
+    state: enabled
+
+- name: Add firewalld rich rule to prevent ssh from any network
+  ansible.posix.firewalld:
+    service: ssh
+    permanent: true
+    state: disabled

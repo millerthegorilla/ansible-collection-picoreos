@@ -80,3 +80,24 @@
     name: openvpn_rand
     enabled: true
     state: started
+
+- name: Add tun0 interface to firewalld external zone
+  ansible.posix.firewalld:
+    zone: external
+    interface: tun0
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Drop ssh from external zone
+  ansible.posix.firewalld:
+    zone: external
+    service: ssh
+    state: disabled
+    immediate: true
+
+- name: Prevent forwarding from other zones
+  ansible.posix.firewalld:
+    zone: external
+    forward: disabled
+    immediate: true

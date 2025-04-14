@@ -18,6 +18,11 @@ It is necessary to specify the Fedora version that is being used.
 ```
  fedora_version: 41
 ```
+If you are running this role before a series of other roles, and those roles install packages, you can
+install them here in advance to minimise the amount of reboots required across the run of the playbook.
+```
+ req_install_required_packages: "fail2ban, openvpn, openssh"
+```
 
 Dependencies
 ------------
