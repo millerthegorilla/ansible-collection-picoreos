@@ -85,6 +85,8 @@
   when: reboot.skipped is not true and reboot.failed is false
 
 - name: whoami
+  become: true
+  become_method: su
   become_user: root
   ansible.builtin.command:
     cmd: whoami
@@ -93,6 +95,8 @@
 - debug: var=wammy
 
 - name: Add firewalld rich rule to only allow ssh from local network
+  become: true
+  become_method: su
   become_user: root
   ansible.posix.firewalld:
     zone: "public"
@@ -101,6 +105,8 @@
     state: enabled
 
 - name: Add firewalld rich rule to prevent ssh from any network
+  become: true
+  become_method: su
   become_user: root
   ansible.posix.firewalld:
     zone: "public"
