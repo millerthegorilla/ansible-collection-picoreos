@@ -72,7 +72,6 @@
   tags: [reboot, req_reboot]
 
 - meta: reset_connection
-  when: sudo_user_removed is defined and sudo_user_removed.changed != -1
   tags: sudo_removal
 
 - name: Wait for ssh to be available
@@ -82,7 +81,7 @@
 
 - name: Add firewalld rich rule to only allow ssh from local network
   ansible.posix.firewalld:
-    rich-rule: 'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'
+    rich_rule: 'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'
     permanent: true
     state: enabled
 
