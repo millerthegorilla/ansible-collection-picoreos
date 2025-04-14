@@ -84,16 +84,6 @@
     delay: 120
   when: reboot.skipped is not true and reboot.failed is false
 
-- name: whoami
-  become: true
-  become_method: su
-  become_user: root
-  ansible.builtin.command:
-    cmd: whoami
-  register: wammy
-
-- debug: var=wammy
-
 - name: Add firewalld rich rule to only allow ssh from local network
   become: true
   become_method: su
@@ -103,6 +93,7 @@
     rich_rule: 'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'
     permanent: true
     state: enabled
+  tags: firewall_ssh
 
 - name: Add firewalld rich rule to prevent ssh from any network
   become: true
@@ -113,3 +104,4 @@
     service: ssh
     permanent: true
     state: disabled
+  tags: firewall_ssh

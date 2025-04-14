@@ -1,8 +1,19 @@
 Role Name
 =========
 
-This role installs the basic requirements for ansible to function as well as some client libraries that are necessary for the later roles to use, such as those for selinux and firewalld.  You might argue that those packages necessary for those roles should be installed by those roles, and I agree, with the exception that rpm-ostree as used by coreos requires a reboot and takes ages, so I have included them in the same place.
-Moving them is on my list of things todo.
+This role installs the basic requirements for ansible to function as well as some client libraries that are necessary for the later roles to use, such as those for selinux and firewalld.
+
+You can specify the variable `req_install_other_packages` either in your playbook or as extra_vars on the command line.  This will add packages to the install.  This can help if you
+want to speed up the other roles, as whenever they install a package the machine has to reboot.
+Adding the packages here will mean only one reboot, and since a reboot takes about 4 minutes, the
+roles then run more quickly.  To do this for this collection you can try:
+`ansible-playbook millerthegorilla.picoreos.picoreos_pb -i /home/user/inventory --ask-vault-pass --extra-vars "req_install_other_packages='fail2ban openvpn openssh'"`
+
+After installing python etc, and when the machine has rebooted, the role adds a rich rule to the firewall configuration to limit access to ssh by only the local network.
+You can skip this with the tag `firewall_ssh`.
+The rich rule is as follows:
+`'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'`
+After adding this rich rule, another firewall-cmd sees ssh is dropped.
 
 Requirements
 ------------

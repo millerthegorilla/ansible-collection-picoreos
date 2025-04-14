@@ -19,7 +19,7 @@
 
 - name: Drop icmp requests to tun0
   ansible.builtin.command:
-    cmd: bash -c "firewall-cmd --zone external --permanent --add-icmp-block=$(firewall-cmd --get-icmptypes | sed 's/time-exceeded //g' | sed 's/fragmentation-needed //g' | sed 's/packet-too-big //g' | sed 's/ / --add-icmp-block=/g')""
+    cmd: bash -c "firewall-cmd --zone external --permanent --add-icmp-block=$(firewall-cmd --get-icmptypes | sed 's/time-exceeded //g' | sed 's/fragmentation-needed //g' | sed 's/packet-too-big //g' | sed 's/ / --add-icmp-block=/g')"
 
 
   #ansible.posix.firewalld:
