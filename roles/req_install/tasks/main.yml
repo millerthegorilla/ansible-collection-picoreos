@@ -2,8 +2,9 @@
 ---
 # tasks for req_install
 - name: Check if packages are already installed
-  ansible.builtin.raw:
+  ansible.builtin.raw: >
     rpm -qa |grep "{{ req_install_ansible_required_packages[-1] }}"
+    && rpm -qa |grep "{{ req_install_other_packages }}"
   register: pkgexists
   ignore_errors: true
 
@@ -39,7 +40,7 @@
     + req_install_ansible_required_packages + ' '
     + req_install_other_packages }}
   register: install_output
-  when: pyexists.rc != 0
+  when: pyexists.rc != 0 or pkgexists.rc != 0
 
 - name: Set fact for req_removal role if used
   ansible.builtin.set_fact:
