@@ -4,7 +4,7 @@
 - name: Check if packages are already installed
   ansible.builtin.raw: >
     rpm -qa |grep "{{ req_install_ansible_required_packages[-1] }}"
-    && rpm -qa |grep "{{ req_install_other_packages }}"
+    && rpm -qa |grep "{{ req_install_other_packages[-1] }}"
   register: pkgexists
   ignore_errors: true
 
