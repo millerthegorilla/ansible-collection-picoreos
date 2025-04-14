@@ -18,8 +18,12 @@
   ignore_errors: true
   tags: sudo_removal
 
-- name: Add user to sudo group if missing (collection install rerun)
-  ansible.builtin.raw: sudo usermod -aG sudo {{ ansible_user }}
+- name: Pause if user is not in sudo group
+  ansible.builtin.pause:
+    prompt: >
+      "You are not in the sudo group. Please ssh in to the remote
+       and add yourself to the sudo group on the remote and press
+       enter to continue."
   when: insudogrp.failed is true
   tags: sudo_removal
 
