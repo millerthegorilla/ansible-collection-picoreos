@@ -87,6 +87,7 @@
 - name: Add firewalld rich rule to only allow ssh from local network
   become_user: root
   ansible.posix.firewalld:
+    zone: "public"
     rich_rule: 'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'
     permanent: true
     state: enabled
@@ -94,6 +95,7 @@
 - name: Add firewalld rich rule to prevent ssh from any network
   become_user: root
   ansible.posix.firewalld:
+    zone: "public"
     service: ssh
     permanent: true
     state: disabled
