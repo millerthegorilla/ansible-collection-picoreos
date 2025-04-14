@@ -33,7 +33,7 @@
 - name: Install needed packages using the raw module
    ** Takes a long time! (rpm-ostree install) **
   ansible.builtin.raw: >
-    sudo rpm-ostree --idempotent install
+    sudo rpm-ostree --idempotent --allow-inactive install
     {{ req_install_rpmfusion_rpm_url + ' '
     + req_install_rpmfusion_rpm_url_nonfree + ' '
     + req_install_ansible_required_packages + ' '
