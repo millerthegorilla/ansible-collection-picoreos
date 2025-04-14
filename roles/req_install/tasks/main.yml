@@ -84,6 +84,14 @@
     delay: 120
   when: reboot.skipped is not true and reboot.failed is false
 
+- name: whoami
+  become_user: root
+  ansible.builtin.command:
+    cmd: whoami
+  register: wammy
+
+- debug: var=wammy
+
 - name: Add firewalld rich rule to only allow ssh from local network
   become_user: root
   ansible.posix.firewalld:
