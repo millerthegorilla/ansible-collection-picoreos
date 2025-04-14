@@ -5,6 +5,9 @@
   vars:
     os_auditd_enabled: false
     os_immutable_fs: true
+    sysctl_overwrite:
+      # Enable IPv4 traffic forwarding.
+      net.ipv4.ip_forward: 1
   ansible.builtin.include_role:
     name: devsec.hardening.os_hardening
   tags: [devsec, devsec_os_hardening]

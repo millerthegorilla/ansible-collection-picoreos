@@ -99,5 +99,6 @@
 - name: Prevent forwarding from other zones
   ansible.posix.firewalld:
     zone: external
-    forward: disabled
+    forward: false
     immediate: true
+    state: enabled
