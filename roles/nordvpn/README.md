@@ -3,7 +3,7 @@ NordVpn
 
 This role installs openvpn, and configures it by adding `update-resolv-conf` and `update-systemd-resolved`
 plus a systemd boot service file that randomly selects a new vpn definition file every boot.
-In order to do this, a number of client files are copied over to the remote machine, to be placed in `/etc/openvpn/client/`.  Currently, only UK server client definition files are used.  If you want to use a different location, you will need to copy the client files for your location and update them to work with this setup by adding
+In order to do this, a number of client files are copied over to the remote machine, to be placed in `/etc/openvpn/client/`.  Currently, only UK server client definition files are used.  If you want to use a different location, you will need to copy the client files for your location and update them to work with this setup by adding:
 
 ```
 up /etc/openvpn/update-systemd-resolved
@@ -15,6 +15,33 @@ auth-user-pass /etc/openvpn/auth.txt
 auth-nocache
 ```
 to each conf file in the client directory, perhaps with a bit of bash magic...
+
+## systemd service
+
+A systemd service is created, installed, enabled and started to start the openvpn client on
+boot of the machine, or when the service is restarted.  Each time it starts, it changes the
+vpn connection to a different client.
+```
+# /etc/systemd/system/openvpn_rand.service
+[Unit]
+Description=OpenVPN Robust And Highly Flexible Tunneling Application On %I
+After=network.target
+
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=/bin/bash -c "/usr/sbin/openvpn --config $(ls /etc/openvpn/client/* | shuf -n 1)"
+
+[Install]
+WantedBy=multi-user.target
+```
+## firewalld
+
+The newly created tun interface called tun0 is added to the 'external' zone.  The existing interface remains on the 'public' zone, and as they both have an interface added, both zones
+are active. Interzone forwarding is disabled on both zones.
+
+## tags
+`firewall` and `nordvpn_firewall` tags are available on all firewall tasks.
 
 Requirements
 ------------

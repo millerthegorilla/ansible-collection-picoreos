@@ -2,8 +2,8 @@
 # picoreos_pb.yml
 ---
 roles:
-  # Install clamav role
-  - src: https://github.com/cisagov/ansible-role-clamav
+  - name: geerlingguy.clamav
+
 
 collections:
   # Install the ansible-devsec-hardening collection fork that

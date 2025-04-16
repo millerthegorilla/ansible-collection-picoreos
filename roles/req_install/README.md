@@ -9,12 +9,17 @@ Adding the packages here will mean only one reboot, and since a reboot takes abo
 roles then run more quickly.  To do this for this collection you can try:
 `ansible-playbook millerthegorilla.picoreos.picoreos_pb -i /home/user/inventory --ask-vault-pass --extra-vars "req_install_other_packages='fail2ban openvpn openssh'"`
 
+## firewall
+
 After installing python etc, and when the machine has rebooted, the role adds a rich rule to the firewall configuration to limit access to ssh by only the local network.
 You can skip this with the tag `firewall_ssh`.
 The rich rule is as follows:
 `'rule family="ipv4" source address="192.168.1.0/24" port protocol="tcp" port="22" accept'`
 After adding this rich rule, another firewall-cmd sees ssh is dropped.
 
+## tags
+
+`firewall` and `req_install_firewall` tags are available on all firewall tasks.
 Requirements
 ------------
 

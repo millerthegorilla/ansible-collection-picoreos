@@ -88,6 +88,7 @@
     permanent: true
     state: enabled
     immediate: true
+  tags: firewall, nordvpn_firewall
 
 - name: Drop ssh from external zone
   ansible.posix.firewalld:
@@ -95,6 +96,7 @@
     service: ssh
     state: disabled
     immediate: true
+  tags: firewall, nordvpn_firewall
 
 - name: Prevent forwarding from other zones
   ansible.posix.firewalld:
@@ -102,3 +104,20 @@
     forward: false
     immediate: true
     state: enabled
+  tags: firewall, nordvpn_firewall
+
+- name: Prevent forwarding from other zones
+  ansible.posix.firewalld:
+    zone: public
+    forward: false
+    immediate: true
+    state: enabled
+  tags: firewall, nordvpn_firewall
+
+- name: Add masquerade to nordvpn tun0 - zone 'external'
+  ansible.posix.firewalld:
+    zone: external
+    masquerade: true
+    state: enabled
+    permanent: true
+  tags: firewall, nordvpn_firewall

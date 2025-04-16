@@ -36,6 +36,10 @@
     state: absent
   loop: "{{ groups['picoreos_hosts'] }}"
 
+# - name: ring bell if one exists
+#   ansible.builtin.shell:
+#     cmd: tput bel
+
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
     prompt: |
