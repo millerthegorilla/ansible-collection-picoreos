@@ -36,9 +36,12 @@
     state: absent
   loop: "{{ groups['picoreos_hosts'] }}"
 
-# - name: ring bell if one exists
-#   ansible.builtin.shell:
-#     cmd: tput bel
+- name: Notify user
+  ansible.builtin.command:
+    cmd: >
+      bash -c "notify-send "REMOVE SD CARD, PLACE IN PI AND BOOT!"
+      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga"
+  ignore_errors: true
 
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
