@@ -36,16 +36,6 @@
     state: absent
   loop: "{{ groups['picoreos_hosts'] }}"
 
-- name: Notify user
-  ansible.builtin.raw: >
-      'notify-send -i face-monkey "REMOVE SD CARD, PLACE IN PI AND BOOT!"
-      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga; sleep 3;
-      killall notify-osd'
-  ignore_errors: true
-  register: rawoutput
-
-- debug: var=rawoutput
-
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
     prompt: |
