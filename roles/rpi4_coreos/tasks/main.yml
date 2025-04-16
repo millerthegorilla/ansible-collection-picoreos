@@ -38,8 +38,9 @@
 
 - name: Notify user
   ansible.builtin.raw: >
-      'notify-send -i face-monkey -t 3000 "REMOVE SD CARD, PLACE IN PI AND BOOT!"
-      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga &'
+      'notify-send -i face-monkey "REMOVE SD CARD, PLACE IN PI AND BOOT!"
+      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga; sleep 3;
+      killall notify-osd'
   ignore_errors: true
   register: rawoutput
 
