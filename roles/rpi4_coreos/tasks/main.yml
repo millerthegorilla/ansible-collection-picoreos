@@ -39,8 +39,8 @@
 - name: Notify user
   ansible.builtin.command:
     cmd: >
-      bash -i -c 'notify-send --urgency critical -i face-monkey "REMOVE SD CARD, PLACE IN PI AND BOOT!"
-      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+      bash -i -c 'notify-send --urgency critical -i face-monkey -t 3000 "REMOVE SD CARD, PLACE IN PI AND BOOT!"
+      && paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga' &
   ignore_errors: true
 
 - name: Message user to remove microsd card and power up
