@@ -37,6 +37,8 @@
   loop: "{{ groups['picoreos_hosts'] }}"
 
 - name: Notify user
+  vars:
+    ansible_become: false
   ansible.builtin.command: '{{ role_path }}/files/bell.sh'
 
 - name: Message user to remove microsd card and power up
@@ -48,4 +50,3 @@
       Press enter to continue.
     echo: false
   notify: cleanup_handler
-  when: 'rawoutput.rc == 0'
