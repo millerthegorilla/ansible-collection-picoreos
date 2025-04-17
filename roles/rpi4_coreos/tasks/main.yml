@@ -37,7 +37,7 @@
   loop: "{{ groups['picoreos_hosts'] }}"
 
 - name: Notify user
-  anisble.builtin.command: bell.sh
+  ansible.builtin.command: bell.sh
 
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
