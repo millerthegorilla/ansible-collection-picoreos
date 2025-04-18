@@ -42,7 +42,7 @@ tags: [raspberry,pi,4b,coreos,fedora]
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies: {
-	'https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs'
+	'git+https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs'
 }
 
 # The URL of the originating SCM repository
