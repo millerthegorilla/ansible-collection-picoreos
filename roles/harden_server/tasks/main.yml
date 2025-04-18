@@ -28,7 +28,7 @@
 
 - name: Install/configure clamav
   ansible.builtin.include_role:
-    name: geerlinguy.clamav
+    name: geerlingguy.clamav
 
 # - name: Install/configure Snort/IDS
 
