@@ -42,7 +42,8 @@ tags: [raspberry,pi,4b,coreos,fedora]
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies: {
-	'git+https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs'
+	'git+https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs',
+  'git+https://github.com/millerthegorilla/ansible-role-clamav': 'rpm_ostree_edits'
 }
 
 # The URL of the originating SCM repository
@@ -69,4 +70,3 @@ build_ignore: []
 # 'omit_default_directives' is a boolean that controls whether the default directives are used. Mutually exclusive
 # with 'build_ignore'
 # manifest: null
-
