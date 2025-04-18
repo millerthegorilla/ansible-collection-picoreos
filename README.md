@@ -78,7 +78,7 @@ You can find the butane template in roles/rpi4_coreos/templates/.  Coreos has an
     `req_install_other_packages` is useful if you want to save time, as if there is a role later on that installs a package it will reboot every time it is installed.  If you have three roles that all install a package, then the machine will install and reboot three times.  If you define those packages installed in other roles using this variable, then the req_install role will install those pacakges and reboot once, and that will be the only reboot necessary.
   ```
     fedora_version: 41
-    req_install_other_packages: openvpn,fail2ban
+    req_install_other_packages: openvpn fail2ban
   ```
   - harden_server:
   Currently there are no variables for the tasks in this role.  The forked version of devsec.ansible-collection-hardening has some variables that are required, so it is not encouraged to change them.  The required variables are listed below.  However, the devsec hardening roles have many variables that you can override.  For more information see https://github.com/millerthegorilla/ansible-collection-hardening
@@ -156,7 +156,7 @@ ansible-playbook -i inventory --ask-vault-password your_playbook.yml
 ```
 # Playbook
 There is an example playbook that can be accessed as follows:
-` ansible-playbook millerthegorilla.picoreos.picoreos_pb -i /home/james/src/picoreos/inventory --ask-vault-pass --extra-vars "req_install_other_packages='fail2ban, openvpn, openssh'"`
+` ansible-playbook millerthegorilla.picoreos.picoreos_pb -i /home/james/src/picoreos/inventory --ask-vault-pass --extra-vars "req_install_other_packages='fail2ban openvpn  openssh'"`
 
 It runs all of the roles, and has some tags defined.
 
