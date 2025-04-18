@@ -46,7 +46,19 @@
   vars:
     ansible_become: false
   ansible.builtin.command:
-    cmd: 'paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
 
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:

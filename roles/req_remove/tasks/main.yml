@@ -17,3 +17,27 @@
     reboot_timeout: 600
     pre_reboot_delay: 0
     post_reboot_delay: 5
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'notify-send -a "Ansible" -i face-monkey "Picoreos" "Picoreos ansible task has finished!"'
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
+
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay --volume=65536 /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
