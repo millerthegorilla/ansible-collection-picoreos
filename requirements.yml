@@ -3,7 +3,7 @@
 ---
 roles:
   - name: geerlingguy.clamav
-
+  - name: git+https://github.com/millerthegorilla/ansible-role-clamav.git,rpm_ostree_edits
 
 collections:
   # Install the ansible-devsec-hardening collection fork that

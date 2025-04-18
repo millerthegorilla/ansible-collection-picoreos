@@ -27,6 +27,8 @@
 #     cmd: bash -c "firewall-cmd --zone external --permanent --add-icmp-block=$(firewall-cmd --get-icmptypes | sed 's/time-exceeded //g' | sed 's/fragmentation-needed //g' | sed 's/packet-too-big //g' | sed 's/ / --add-icmp-block=/g')"
 
 - name: Install/configure clamav
+  vars:
+    ansible_package_use: community.general.rpm_ostree_pkg
   ansible.builtin.include_role:
     name: geerlingguy.clamav
 
