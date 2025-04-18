@@ -30,7 +30,7 @@
     - role: req_install
       vars:
         fedora_version: 41
-        req_install_other_packages: 'fail2ban openvpn'
+        req_install_other_packages: 'fail2ban openvpn openssh'
       tags: req_install
 
 - name: Harden server

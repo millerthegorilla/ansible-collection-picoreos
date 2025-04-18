@@ -20,17 +20,15 @@
     name: devsec.hardening.ssh_hardening
   tags: [devsec, devsec_ssh_hardening]
 
-
-
 # icmp requests are already limited by devsec.os_hardening.
+# this task blocks all but the most necessary of icmp messages
 # - name: Drop icmp requests to tun0
 #   ansible.builtin.command:
 #     cmd: bash -c "firewall-cmd --zone external --permanent --add-icmp-block=$(firewall-cmd --get-icmptypes | sed 's/time-exceeded //g' | sed 's/fragmentation-needed //g' | sed 's/packet-too-big //g' | sed 's/ / --add-icmp-block=/g')"
 
-
-  #ansible.posix.firewalld:
-
-# - name: Install/configure clamav
+- name: Install/configure clamav
+  ansible.builtin.include_role:
+    name: geerlinguy.clamav
 
 # - name: Install/configure Snort/IDS
 
