@@ -2,7 +2,7 @@
 # picoreos_pb.yml
 ---
 roles:
-  - src: https://github.com/millerthegorilla/ansible-role-clamav
+  - name: https://github.com/millerthegorilla/ansible-role-clamav
     type: git
     version: rpm_ostree_edits
   # - name: geerlingguy.clamav
