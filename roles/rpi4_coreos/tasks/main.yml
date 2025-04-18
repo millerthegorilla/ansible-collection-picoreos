@@ -26,7 +26,7 @@
   ansible.builtin.include_tasks:
     file: templating.yml
 
-  # Provision the microsd card and setup the machine
+  Provision the microsd card and setup the machine
 - name: Provision machine
   ansible.builtin.import_tasks: provision.yml
 
@@ -40,11 +40,13 @@
   vars:
     ansible_become: false
   ansible.builtin.command:
-    cmd: >
-      notify-send -i face-monkey "Hello world" &&
-      paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga;
+    cmd: 'notify-send -a "Ansible" -i face-monkey "Picoreos" "Picoreos ansible task requires user interaction"'
 
-  #'{{ role_path }}/files/bell.sh'
+- name: Notify user
+  vars:
+    ansible_become: false
+  ansible.builtin.command:
+    cmd: 'paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
 
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
