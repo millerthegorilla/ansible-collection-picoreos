@@ -39,6 +39,19 @@ install them here in advance to minimise the amount of reboots required across t
 ```
  req_install_required_packages: "fail2ban openvpn openssh"
 ```
+### caveat
+Currently, due to rpm-ostree systems using nss-altfiles, if you add the openvpn package, then you will need to add it to /etc/group manually or later package layering will fail.  (see https://github.com/coreos/rpm-ostree/issues/49#issuecomment-478091562).  So if you add openvpn you will need to add the
+following task after the req_install role...
+```
+- name: Openvpn requires manual addition to /etc/group or later package layering fails
+  hosts: picoreos_hosts
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Add openvpn group to /etc/group
+      ansible.builtin.command:
+        cmd: bash -c "grep -E '^openvpn:' /usr/lib/group >> /etc/group"
+```
 
 Dependencies
 ------------

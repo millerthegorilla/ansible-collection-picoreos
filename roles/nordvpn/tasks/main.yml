@@ -19,6 +19,10 @@
       openvpn_installed.needs_reboot is defined
       and openvpn_installed.needs_reboot
 
+# - name: Openvpn requires manual addition to /etc/group or later package layering fails
+#   ansible.builtin.command:
+#     cmd: bash -c "grep -E '^openvpn:' /usr/lib/group >> /etc/group"
+
 - name: Complete templates
   ansible.builtin.import_tasks: templating.yml
 
@@ -45,14 +49,6 @@
 
 - meta: reset_connection
   tags: sudo_removal
-
-# - name: Copy auth file
-#   ansible.builtin.copy:
-#     src: "{{ role_path }}/files/templated/auth.txt"
-#     dest: /etc/openvpn/
-#     mode: 0400
-#     owner: root
-#     group: root
 
 - name: Copy systemd service
   ansible.builtin.copy:
