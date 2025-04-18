@@ -41,10 +41,18 @@ tags: [raspberry,pi,4b,coreos,fedora]
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
-dependencies: {
-	geerlingguy.ansible-role-clamav,
-	'git+https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs'
-}
+dependencies:
+  roles:
+    - src: https://github.com/millerthegorilla/ansible-role-clamav
+      type: git
+      version: rpm_ostree_edits
+  # - name: geerlingguy.clamav
+
+  collections:
+  # Install the ansible-devsec-hardening collection fork that
+  # has been modified to work with rpm-ostree
+    - name: git+https://github.com/millerthegorilla/ansible-collection-hardening,os_immutable_fs
+
 
 # The URL of the originating SCM repository
 repository: https://github.com/millerthegorilla/picoreos
