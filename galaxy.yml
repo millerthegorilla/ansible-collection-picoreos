@@ -41,12 +41,10 @@ tags: [raspberry,pi,4b,coreos,fedora]
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
-# dependencies:
-#   - ansible-role-clamav: 'https://github.com/millerthegorilla/ansible-collection-hardening.git'
-# 	    type: git
-# 		  version: 'os_immutable_fs'
-#   - 'git+https://github.com/millerthegorilla/ansible-role-clamav': 'rpm_ostree_edits'
-
+dependencies: {
+	geerlingguy.ansible-role-clamav,
+	'git+https://github.com/millerthegorilla/ansible-collection-hardening.git': 'os_immutable_fs'
+}
 
 # The URL of the originating SCM repository
 repository: https://github.com/millerthegorilla/picoreos
