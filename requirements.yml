@@ -2,10 +2,14 @@
 # picoreos_pb.yml
 ---
 roles:
-  - name: geerlingguy.clamav
-  - name: git+https://github.com/millerthegorilla/ansible-role-clamav.git,rpm_ostree_edits
+  - src: https://github.com/millerthegorilla/ansible-role-clamav
+    type: git
+    version: rpm_ostree_edits
+  # - name: geerlingguy.clamav
 
 collections:
   # Install the ansible-devsec-hardening collection fork that
   # has been modified to work with rpm-ostree
-  - name: git+https://github.com/millerthegorilla/ansible-collection-hardening,os_immutable_fs
+  - name: https://github.com/millerthegorilla/ansible-collection-hardening
+    type: git
+    version: os_immutable_fs
