@@ -39,7 +39,12 @@
 - name: Notify user
   vars:
     ansible_become: false
-  ansible.builtin.command: '{{ role_path }}/files/bell.sh'
+  ansible.builtin.command:
+    cmd: >
+      notify-send -i face-monkey "Hello world" &&
+      paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga;
+
+  #'{{ role_path }}/files/bell.sh'
 
 - name: Message user to remove microsd card and power up
   ansible.builtin.pause:
