@@ -26,7 +26,7 @@
   ansible.builtin.include_tasks:
     file: templating.yml
 
-  Provision the microsd card and setup the machine
+  # Provision the microsd card and setup the machine
 - name: Provision machine
   ansible.builtin.import_tasks: provision.yml
 
